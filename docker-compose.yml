@@ -1,0 +1,79 @@
+version: "3.7"
+services:
+
+  #PHP service
+  tromba-app:
+    build:
+      context: .
+      dockerfile: php/Dockerfile
+    image: tromba-app
+    container_name: tromba-app
+    restart: unless-stopped
+    tty: true
+    working_dir: /var/www
+    volumes:
+      - type: bind
+        source: ./
+        target: /var/www
+      - type: bind
+        source: ./php/config/local.ini
+        target: /usr/local/etc/php/conf.d/local.ini
+    networks:
+      - tromba-network
+
+
+  #Mysql service
+  tromba-db:
+    image: mysql:5.7
+    container_name: tromba-db
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - type: bind
+        source: ./mysql/
+        target: /var/www/
+    environment:
+      MYSQL_DATABASE: tromba
+      MYSQL_ROOT_PASSWORD: secret
+    networks:
+      - tromba-network
+
+
+  #Nginx service
+  tromba-webserver:
+    image: nginx:alpine
+    container_name: tromba-webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - type: bind
+        source: ./
+        target: /var/www
+      - type: bind
+        source: ./nginx/conf.d/
+        target: /etc/nginx/conf.d/
+    networks:
+      - tromba-network
+
+  tromba-node:
+    build:
+      context: .
+      dockerfile: node/Dockerfile
+    image: node:15.6-alpine
+    container_name: tromba-node
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - type: bind
+        source: ./
+        target: /usr/app
+    networks:
+      - tromba-network
+
+#Docker Networks
+networks:
+  tromba-network:
+    driver: bridge
