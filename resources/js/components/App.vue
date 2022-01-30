@@ -5,8 +5,9 @@
 	</v-app-bar>
 	<v-main>
 		<v-container>
-			<v-row :align="align">
+			<v-row>
         <v-col md="6"><Users></Users></v-col>
+				<v-col md="6"><Teams></Teams></v-col>
       </v-row>
 		</v-container>
 	</v-main>
@@ -16,10 +17,12 @@
 <script>
 
 import Users from './Users.vue';
+import Teams from './Teams.vue';
 
 export default {
 	components: {
-		Users
+		Users,
+		Teams
 	},
 	data: () => ({
 		url: process.env.MIX_APP_URL

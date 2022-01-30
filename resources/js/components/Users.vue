@@ -39,7 +39,7 @@
 
 		<v-card-text>
 			<v-form @submit.prevent="save">
-				<v-text-field v-model="newUser.name" label="name"></v-text-field>
+				<v-text-field v-model="newUser.name" label="Name"></v-text-field>
 			</v-form>
 		</v-card-text>
 
@@ -56,19 +56,16 @@
 <script>
 export default {
 	data: () => ({
-		users: [
-			{
-				name: 'user1',
-			},
-			{
-				name: 'user2'
-			}
-		],
+		users: [],
 		dialog: false,
 		newUser: {
 			name: null
 		}
 	}),
+	mounted(){
+
+		this.users = this.$store.state.users;
+	},
 	methods: {
 
 		save(){
@@ -78,10 +75,12 @@ export default {
 				name: null
 			};
 			this.dialog = false;
+			this.$store.commit('setUsers', this.users);
 		},
 		rmUser(index){
 
 			this.users.splice(index, 1);
+			this.$store.commit('setUsers', this.users);
 		}
 	}
 }
