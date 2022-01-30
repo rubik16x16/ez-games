@@ -46,6 +46,68 @@ const store = new Vuex.Store({
 					}
 				]
 			}
+		],
+		matches: [
+			{
+				name: 'test',
+				start: '2022-01-30T00:00',
+				end: '2022-01-31T00:00',
+				running: false,
+				teams: [
+					{
+						name: 'team1',
+						players: [
+							{
+								name: 'user1',
+							},
+							{
+								name: 'user2'
+							},
+						]
+					},
+					{
+						name: 'team2',
+						players: [
+							{
+								name: 'user3',
+							},
+							{
+								name: 'user4'
+							}
+						]
+					}
+				]
+			},
+			{
+				name: 'test2',
+				start: '2022-01-30T00:00',
+				end: '2022-01-31T00:00',
+				running: false,
+				teams: [
+					{
+						name: 'team1',
+						players: [
+							{
+								name: 'user1',
+							},
+							{
+								name: 'user2'
+							},
+						]
+					},
+					{
+						name: 'team2',
+						players: [
+							{
+								name: 'user3',
+							},
+							{
+								name: 'user4'
+							}
+						]
+					}
+				]
+			}
 		]
   },
   mutations: {
@@ -56,7 +118,11 @@ const store = new Vuex.Store({
 		setTeams(state, payload) {
 
 			state.teams = payload;
-    }
+    },
+		setMatches(state, payload){
+
+			state.matches = payload;
+		}
   }
 });
 

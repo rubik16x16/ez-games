@@ -64,7 +64,10 @@ export default {
 	}),
 	mounted(){
 
-		this.users = this.$store.state.users;
+		this.users = this.$store.state.users.map(item => {
+
+			return {...item};
+		});
 	},
 	methods: {
 

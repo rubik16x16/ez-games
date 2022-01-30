@@ -9,6 +9,11 @@
         <v-col md="6"><Users></Users></v-col>
 				<v-col md="6"><Teams></Teams></v-col>
       </v-row>
+			<v-row>
+				<v-col>
+					<Matches></Matches>
+				</v-col>
+			</v-row>
 		</v-container>
 	</v-main>
 </v-app>
@@ -18,11 +23,13 @@
 
 import Users from './Users.vue';
 import Teams from './Teams.vue';
+import Matches from './Matches.vue';
 
 export default {
 	components: {
 		Users,
-		Teams
+		Teams,
+		Matches
 	},
 	data: () => ({
 		url: process.env.MIX_APP_URL
