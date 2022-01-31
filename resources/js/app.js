@@ -11,38 +11,34 @@ const store = new Vuex.Store({
   state: {
     users: [
 			{
-				name: 'user1',
+				name: 'Iron#6056064',
+				points: 0,
 			},
 			{
-				name: 'user2'
-			},
-			{
-				name: 'user3',
-			},
-			{
-				name: 'user4'
+				name: 'damqge#9252117',
+				points: 0,
 			}
 		],
 		teams: [
 			{
 				name: 'team1',
+				points: 0,
 				players: [
 					{
-						name: 'user1',
-					},
-					{
-						name: 'user2'
-					},
+						name: 'Iron#6056064',
+						points: 0,
+						matches: []
+					}
 				]
 			},
 			{
 				name: 'team2',
+				points: 0,
 				players: [
 					{
-						name: 'user3',
-					},
-					{
-						name: 'user4'
+						name: 'damqge#9252117',
+						points: 0,
+						matches: []
 					}
 				]
 			}
@@ -56,54 +52,24 @@ const store = new Vuex.Store({
 				teams: [
 					{
 						name: 'team1',
+						points: 0,
 						players: [
 							{
-								name: 'user1',
-							},
-							{
-								name: 'user2'
-							},
+								name: 'Iron#6056064',
+								points: 0,
+								matches: []
+							}
 						]
 					},
 					{
 						name: 'team2',
+						points: 0,
 						players: [
 							{
-								name: 'user3',
+								name: 'damqge#9252117',
+								points: 0,
+								matches: []
 							},
-							{
-								name: 'user4'
-							}
-						]
-					}
-				]
-			},
-			{
-				name: 'test2',
-				start: '2022-01-30T00:00',
-				end: '2022-01-31T00:00',
-				running: false,
-				teams: [
-					{
-						name: 'team1',
-						players: [
-							{
-								name: 'user1',
-							},
-							{
-								name: 'user2'
-							},
-						]
-					},
-					{
-						name: 'team2',
-						players: [
-							{
-								name: 'user3',
-							},
-							{
-								name: 'user4'
-							}
 						]
 					}
 				]

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Home;
+use App\Http\Controllers\Proxy;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,7 +17,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [Home::class, 'index']);
 
-Route::get('/datos', function(){
-
-	return response('datos');
-});
+Route::get('/proxy', [Proxy::class, 'index']);

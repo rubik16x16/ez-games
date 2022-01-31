@@ -59,7 +59,9 @@ export default {
 		users: [],
 		dialog: false,
 		newUser: {
-			name: null
+			name: null,
+			matches: [],
+			points: 0
 		}
 	}),
 	mounted(){

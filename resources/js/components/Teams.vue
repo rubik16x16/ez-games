@@ -80,7 +80,8 @@ export default {
 		dialog: false,
 		newTeam: {
 			name: null,
-			players: []
+			players: [],
+			points: 0
 		},
 		localUsers: [],
 		val: false

@@ -82,6 +82,49 @@
 		</v-card-actions>
 	</v-card>
 </v-dialog>
+<div v-for="(match, index) of matches.filter(item => item.running)" :key="'match-running-' + index">
+	<v-card>
+		<v-card-title>{{ match.name }}</v-card-title>
+		<v-card-text>
+			<v-card v-for="(team, index) of match.teams" :key="'team-running-' + index">
+				<v-card-title>{{ team.name }} Points: {{ team.points }}</v-card-title>
+				<v-card-text>
+					<v-card v-for="(player, index) of team.players" :key="'player-running-' + index">
+						<v-card-title>{{ player.name }} Points: {{ player.points }}</v-card-title>
+						<v-card-text>
+							<v-row>
+								<v-col>
+									<v-simple-table>
+										<template v-slot:default>
+											<thead>
+												<tr>
+													<th class="text-center">#</th>
+													<th class="text-center">Kills</th>
+													<th class="text-center">Kd ratio</th>
+													<th class="text-center">Date</th>
+												</tr>
+											</thead>
+											<tbody class="text-center">
+												<tr v-for="(playerMatch, index) of player.matches" :key="'player-match' + index">
+													<td>{{ playerMatch.attributes.id }}</td>
+													<td>{{ playerMatch.segments[0].stats.kills.value }}</td>
+													<td>{{ playerMatch.segments[0].stats.kdRatio.value }}</td>
+													<td>{{ playerMatch.metadata.timestamp }}</td>
+												</tr>
+											</tbody>
+										</template>
+									</v-simple-table>
+								</v-col>
+							</v-row>
+						</v-card-text>
+					</v-card>
+				</v-card-text>
+			</v-card>
+			<v-spacer></v-spacer>
+		</v-card-text>
+	</v-card>
+	<v-spacer></v-spacer>
+</div>
 </div>
 </template>
 
@@ -137,13 +180,45 @@ export default {
 			this.matches.splice(index, 1);
 			this.$store.commit('setMatches', this.matches);
 		},
-		runMatch(match){
+		runMatch : async (match) => {
 
 			match.running = true;
-			match.loop = setInterval(() => {
 
-				console.log(`run match ${match.name}`);
-			}, 2000);
+			for(let team of match.teams){
+
+				for(let player of team.players){
+					await axios.get(process.env.MIX_PROXY_SERVER, {
+						params: {
+							'api_key': process.env.MIX_PROXY_API_KEY,
+							'url': `https://api.tracker.gg/api/v2/warzone/standard/matches/atvi/${player.name.replace('#', '%23')}?type=wz`,
+						}
+					}).then((res) => {
+
+						let matches = res.data.data.matches;
+						matches.sort((a, b) => (b.segments[0].stats.kills.value - a.segments[0].stats.kills.value));
+						player.matches = matches;
+
+						let bestMatches = matches.slice(0, 3);
+						let playerPoints = 0;
+
+						for(let bestMatch of bestMatches){
+
+							playerPoints += bestMatch.segments[0].stats.kills.value;
+						}
+
+						player.points = playerPoints;
+						console.log(res);
+					});
+				}
+
+				let teamPoints = 0;
+				for(let player of team.players){
+
+					teamPoints += player.points;
+				}
+
+				team.points = teamPoints;
+			}
 		},
 		stopMatch(match){
 

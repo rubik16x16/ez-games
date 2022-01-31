@@ -1,7 +1,7 @@
 <template>
 <v-app>
 	<v-app-bar app>
-		<v-toolbar-title>EZ-GAMES</v-toolbar-title>
+		<v-toolbar-title>EZ-BATTLES</v-toolbar-title>
 	</v-app-bar>
 	<v-main>
 		<v-container>
