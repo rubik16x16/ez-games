@@ -107,7 +107,8 @@ export default {
 			this.teams.push(this.newTeam);
 			this.newTeam = {
 				name: null,
-				players: []
+				players: [],
+				points: 0
 			};
 
 			this.localUsers = this.localUsers.map((item) => {

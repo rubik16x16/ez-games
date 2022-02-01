@@ -77,7 +77,9 @@ export default {
 
 			this.users.push(this.newUser);
 			this.newUser = {
-				name: null
+				name: null,
+				matches: [],
+				points: 0
 			};
 			this.dialog = false;
 			this.$store.commit('setUsers', this.users);

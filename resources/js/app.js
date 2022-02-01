@@ -46,8 +46,8 @@ const store = new Vuex.Store({
 		matches: [
 			{
 				name: 'test',
-				start: '2022-01-30T00:00',
-				end: '2022-01-31T00:00',
+				start: '2022-02-01T04:00',
+				end: '2022-02-01T06:00',
 				running: false,
 				teams: [
 					{

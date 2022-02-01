@@ -146,6 +146,9 @@ export default {
 
 		this.matches = this.$store.state.matches;
 		this.loadTeams();
+
+
+
 	},
 	methods: {
 
@@ -195,10 +198,29 @@ export default {
 					}).then((res) => {
 
 						let matches = res.data.data.matches;
-						matches.sort((a, b) => (b.segments[0].stats.kills.value - a.segments[0].stats.kills.value));
-						player.matches = matches;
+						let allowedMatches = matches.filter((item) => {
 
-						let bestMatches = matches.slice(0, 3);
+							let matchStartDate = new Date(match.start + '+00:00');
+							let matchEndDate = new Date(match.end + '+00:00');
+							let matchDate = new Date(item.metadata.timestamp);
+
+							if(matchDate >= matchStartDate && matchDate <= matchEndDate){
+								return item;
+							}
+						});
+
+						allowedMatches.sort((a, b) => (b.segments[0].stats.kills.value - a.segments[0].stats.kills.value));
+						player.matches = allowedMatches;
+
+						let bestMatches;
+						if(allowedMatches.length >= 3){
+
+							bestMatches = allowedMatches.slice(0, 3);
+						}else{
+
+							bestMatches = allowedMatches.slice(0, allowedMatches.length);
+						}
+
 						let playerPoints = 0;
 
 						for(let bestMatch of bestMatches){

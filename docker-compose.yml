@@ -2,12 +2,12 @@ version: "3.7"
 services:
 
   #PHP service
-  tromba-app:
+  ez-games-app:
     build:
       context: .
       dockerfile: php/Dockerfile
-    image: tromba-app
-    container_name: tromba-app
+    image: ez-games-app
+    container_name: ez-games-app
     restart: unless-stopped
     tty: true
     working_dir: /var/www
@@ -19,13 +19,13 @@ services:
         source: ./php/config/local.ini
         target: /usr/local/etc/php/conf.d/local.ini
     networks:
-      - tromba-network
+      - ez-games-network
 
 
   #Mysql service
-  tromba-db:
+  ez-games-db:
     image: mysql:5.7
-    container_name: tromba-db
+    container_name: ez-games-db
     restart: unless-stopped
     tty: true
     volumes:
@@ -33,16 +33,16 @@ services:
         source: ./mysql/
         target: /var/www/
     environment:
-      MYSQL_DATABASE: tromba
+      MYSQL_DATABASE: ez-games
       MYSQL_ROOT_PASSWORD: secret
     networks:
-      - tromba-network
+      - ez-games-network
 
 
   #Nginx service
-  tromba-webserver:
+  ez-games-webserver:
     image: nginx:alpine
-    container_name: tromba-webserver
+    container_name: ez-games-webserver
     restart: unless-stopped
     tty: true
     ports:
@@ -56,14 +56,14 @@ services:
         source: ./nginx/conf.d/
         target: /etc/nginx/conf.d/
     networks:
-      - tromba-network
+      - ez-games-network
 
-  tromba-node:
+  ez-games-node:
     build:
       context: .
       dockerfile: node/Dockerfile
     image: node:15.6-alpine
-    container_name: tromba-node
+    container_name: ez-games-node
     restart: unless-stopped
     tty: true
     volumes:
@@ -71,9 +71,9 @@ services:
         source: ./
         target: /usr/app
     networks:
-      - tromba-network
+      - ez-games-network
 
 #Docker Networks
 networks:
-  tromba-network:
+  ez-games-network:
     driver: bridge
