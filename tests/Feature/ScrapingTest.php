@@ -17,11 +17,11 @@ class ScrapingTest extends TestCase
      */
     public function test_scraping(){
 
-			$client = new Client();
-			$res = $client->request('GET', 'https://api.tracker.gg/api/v2/warzone/standard/matches/atvi/Iron%236056064?type=wz');
+			// $client = new Client();
+			// $res = $client->request('GET', 'https://api.tracker.gg/api/v2/warzone/standard/matches/atvi/Iron%236056064?type=wz');
 
-			$body = $res->getBody();
+			// $body = $res->getBody();
 
-			dd($body);
+			// dd($body);
     }
 }
