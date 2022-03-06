@@ -24,15 +24,18 @@
 import Users from './Users.vue';
 import Teams from './Teams.vue';
 import Matches from './Matches.vue';
+import CountDown from './CountDown';
 
 export default {
 	components: {
 		Users,
 		Teams,
-		Matches
+		Matches,
+		CountDown
 	},
 	data: () => ({
-		url: process.env.MIX_APP_URL
+		url: process.env.MIX_APP_URL,
+		end: new Date('2022-03-30T18:37:00')
 	}),
 	mounted(){
 

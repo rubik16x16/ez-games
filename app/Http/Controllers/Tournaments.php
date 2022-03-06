@@ -13,7 +13,7 @@ class Tournaments extends Controller{
 	 */
 	public function index(){
 
-		$tournaments = Tournament::all();
+		$tournaments = Tournament::with('teams')->get();
 		return response()->json($tournaments, 200);
 	}
 
