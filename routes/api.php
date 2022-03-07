@@ -5,6 +5,7 @@ use App\Http\Controllers\Profiles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Tournaments;
+use App\Http\Controllers\Profile;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,9 @@ Route::middleware(['auth:api'])->group(function(){
 	Route::resource('tournaments', Tournaments::class)->parameters([
 		'tournaments' => 'id'
 	]);
+
+	Route::get('profile', [Profile::class, 'index'])->name('profile.index');
+	Route::put('profile/nickname', [Profile::class, 'setNickname'])->name('profile.nickname.update');
 });
 
 

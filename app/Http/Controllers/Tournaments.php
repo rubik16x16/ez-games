@@ -54,7 +54,7 @@ class Tournaments extends Controller{
 		$tournament->fill($request->all());
 		$tournament->save();
 
-		return response()->json($tournament, 204);
+		return response()->json($tournament);
 	}
 
 	/**

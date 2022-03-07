@@ -52,7 +52,7 @@ class TournamentsTest extends TestCase{
 			'end' => '2022-03-06 12:00:00'
 		]);
 
-		$response->assertStatus(204);
+		$response->assertStatus(200);
 	}
 
 	public function test_delete(){
