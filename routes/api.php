@@ -5,7 +5,7 @@ use App\Http\Controllers\Profiles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Tournaments;
-use App\Http\Controllers\Profile;
+use App\Http\Controllers\User\Profile;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,9 +30,8 @@ Route::middleware(['auth:api'])->group(function(){
 
 	Route::get('profile', [Profile::class, 'index'])->name('profile.index');
 	Route::put('profile/nickname', [Profile::class, 'setNickname'])->name('profile.nickname.update');
+	Route::get('profile/cod-user', [Profile::class, 'getCodUser']);
+	Route::get('users');
 });
-
-
-Route::get('check-nickname', [Register::class, 'checkNickname']);
 
 require __DIR__.'/auth.php';

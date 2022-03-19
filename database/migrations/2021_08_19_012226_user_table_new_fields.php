@@ -15,8 +15,8 @@ class UserTableNewFields extends Migration
 
 		Schema::table('users', function(Blueprint $table){
 
-			$table->unsignedBigInteger('team_id')->nullable();
-			$table->foreign('team_id')->references('id')->on('teams')->onDelete('set null');
+			// $table->unsignedBigInteger('team_id')->nullable();
+			// $table->foreign('team_id')->references('id')->on('teams')->onDelete('set null');
 		});
 	}
 
@@ -29,8 +29,8 @@ class UserTableNewFields extends Migration
 
 		Schema::table('users', function(Blueprint $table){
 
-			$table->dropForeign('users_team_id_foreign');
-			$table->dropColumn('team_id');
+			// $table->dropForeign('users_team_id_foreign');
+			// $table->dropColumn('team_id');
 		});
 	}
 }

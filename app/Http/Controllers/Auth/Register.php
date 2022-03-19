@@ -4,61 +4,113 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\UserVerificationToken;
+use App\Mail\DemoEmail;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class Register extends Controller{
 
 	public function store(Request $request){
 
-		$request->validate([
-			'nickname' => ['required', 'string', 'max:255', 'unique:users'],
+		$validator = Validator::make($request->all(), [
+			'captchaResponse' => ['required'],
 			'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-			'password' => ['required'],
+			'password' => ['required', 'max:30']
 		]);
 
-		$user = User::create([
-			'nickname' => $request->nickname,
-			'email' => $request->email,
-			'password' => Hash::make($request->password),
+		if ($validator->fails()) {
+			return response()->json($validator->messages(), 400);
+		}
+
+		$client = new Client();
+		$res = $client->post('https://www.google.com/recaptcha/api/siteverify', [
+			'form_params' => [
+				'secret' => env('CAPTCHA_SECRET'),
+				'response' => $request->captchaResponse
+			]
 		]);
 
-		$tokenResult = $user->createToken('AccessToken');
+		$body = $res->getBody();
+		$content = json_decode($body->getContents());
+
+		if(!$content->success){
+
+			return response()->json([
+				'errors' => [
+					'captcha' =>['Invalid captchaResponse']
+				]
+			], 400);
+		}
+
+		try {
+
+			DB::beginTransaction();
+			$user = User::create([
+				'email' => $request->email,
+				'password' => Hash::make($request->password),
+			]);
+
+			$UserVerificationToken = new UserVerificationToken([
+				'token' => bin2hex(random_bytes(30))
+			]);
+
+			$UserVerificationToken->user()->associate($user);
+			$UserVerificationToken->save();
+			$tokenResult = $user->createToken('AccessToken');
+			DB::commit();
+		} catch (\Exception $e) {
+
+			DB::rollback();
+			return response()->json($e->getMessage());
+		}
+
 		$token = $tokenResult->token;
+		Mail::to("ekimanthony1996@hotmail.com")->send(new DemoEmail(['token' => $UserVerificationToken->token
+		]));
 
 		return response()->json([
 			'access_token' => $tokenResult->accessToken,
 			'token_type' => 'Bearer',
 			'expires_at' => Carbon::parse($token->expires_at)->toDateTimeString(),
-			'user' => [
-				'email' => $user->email,
-				'id' => $user->id
-			]
+			'user' => $user
 		]);
 	}
 
-	public function checkNickname(Request $request){
+	public function verifyEmail(Request $request, $token){
 
-		//legendary117s
+		$token = UserVerificationToken::with(['user'])
+			->where('token', $token)->first();
 
-		$client = new Client();
-		$nickname = str_replace('#', '%23', $request->nickname);
+		if($token){
 
-		$url = env('PROXY_SERVER') . '?api_key=' . env('PROXY_API_KEY') . "&url=https://api.tracker.gg/api/v2/warzone/standard/profile/atvi/$nickname?";
+			try {
 
-		$res = $client->request('GET', $url);
+				DB::beginTransaction();
+				$token->enable = false;
+				$token->save();
 
-		$data = json_decode($res->getBody());
+				$token->user->email_verified_at = new Carbon();
+				$token->user->save();
+				DB::commit();
+			} catch (\Exception $e) {
 
-		return response()->json([
-			'avatarUrl' => $data->data->platformInfo->avatarUrl,
-			'kills' => $data->data->segments[0]->stats->kills->value,
-			'deaths' => $data->data->segments[0]->stats->deaths->value,
-			'kdRatio' => $data->data->segments[0]->stats->kdRatio->value,
-			'winRatio' => $data->data->segments[0]->stats->wlRatio->value
-		]);
+				DB::rollback();
+				return response()->json($e->getMessage());
+			}
+
+			return response()->json([
+				'user' => $token->user
+			]);
+		}
+
+		return response()->json('invalid token', 400);
 	}
 }

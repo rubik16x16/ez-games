@@ -26,10 +26,7 @@ class Login extends Controller{
 				'access_token' => $tokenResult->accessToken,
 				'token_type' => 'Bearer',
 				'expires_at' => Carbon::parse($token->expires_at)->toDateTimeString(),
-				'user' => [
-					'email' => $user->email,
-					'id' => $user->id
-				]
+				'user' => $user
 			]);
 		}
 
