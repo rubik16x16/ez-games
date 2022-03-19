@@ -6,15 +6,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Team extends Model{
-    use HasFactory;
+	use HasFactory;
 
-		protected $table = 'teams';
-		protected $fillable = [
-			'name'
-		];
+	protected $table = 'teams';
+	protected $fillable = [
+		'name'
+	];
 
-		public function tournament(){
+	public function tournament(){
 
-			return $this->belongsToMany(Tournament::class, 'tournaments_teams');
-		}
+		return $this->belongsTo(Tournament::class);
+	}
+
+	public function players(){
+
+		return $this->belongsToMany(User::class, 'user_team')->withPivot('confirmed');
+	}
 }

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Tournaments;
 use App\Http\Controllers\User\Profile;
+use App\Http\Controllers\User\Users;
+use App\Http\Controllers\Teams;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,7 +33,9 @@ Route::middleware(['auth:api'])->group(function(){
 	Route::get('profile', [Profile::class, 'index'])->name('profile.index');
 	Route::put('profile/nickname', [Profile::class, 'setNickname'])->name('profile.nickname.update');
 	Route::get('profile/cod-user', [Profile::class, 'getCodUser']);
-	Route::get('users');
+	Route::get('users/search', [Users::class, 'search'])->name('users.search');
+	Route::post('tournaments/{tournamentId}/teams', [Teams::class, 'store'])->name('tournaments.teams.store');
+	Route::get('teams', [Teams::class, 'index'])->name('teams.index');
 });
 
 require __DIR__.'/auth.php';

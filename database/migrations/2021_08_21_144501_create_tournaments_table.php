@@ -18,8 +18,6 @@ class CreateTournamentsTable extends Migration{
 			$table->string('name');
 			$table->dateTime('start');
 			$table->dateTime('end');
-			$table->unsignedBigInteger('winner_id')->nullable();
-			$table->foreign('winner_id')->references('id')->on('teams')->onDelete('set null');
 			$table->timestamps();
 		});
 	}
