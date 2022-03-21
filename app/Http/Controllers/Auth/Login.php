@@ -6,17 +6,22 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class Login extends Controller{
 
 	public function authenticate(Request $request){
 
-		$credentials = $request->validate([
+		$validator = Validator::make($request->all(), [
 			'email' => ['required', 'email'],
 			'password' => ['required'],
 		]);
 
-		if(Auth::attempt($credentials)){
+		if ($validator->fails()) {
+			return response()->json($validator->messages(), 400);
+		}
+
+		if(Auth::attempt($validator->valid())){
 
 			$user = $request->user();
 			$tokenResult = $user->createToken('AccessToken');
@@ -31,7 +36,7 @@ class Login extends Controller{
 		}
 
 		return response()->json([
-			'message' => 'Unauthorized'
+			'Email' => ['these credentials do not match our records']
 		], 401);
 	}
 

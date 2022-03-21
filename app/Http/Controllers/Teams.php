@@ -43,9 +43,12 @@ class Teams extends Controller{
 			$tournament = Tournament::find($tournamentId);
 			$team = new Team(['name' => $request->name]);
 			$tournament->teams()->save($team);
-	  	$team->players()->attach(collect($request->players)->map(function($item) {
+			$players = collect($request->players)->map(function($item) {
 	  		return $item['id'];
-	  	}));
+	  	});
+
+	  	$players->push($request->user()->id);
+	  	$team->players()->attach($players);
 
 			DB::commit();
 		} catch (\Exception $e) {

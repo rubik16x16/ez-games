@@ -18,6 +18,9 @@ class CreateTournamentsTable extends Migration{
 			$table->string('name');
 			$table->dateTime('start');
 			$table->dateTime('end');
+			$table->float('entry')->nullable();
+			$table->float('reward')->nullable();
+			$table->enum('type', ['single', 'duos', 'trios', 'quads']);
 			$table->timestamps();
 		});
 	}

@@ -10,7 +10,9 @@ class Users extends Controller{
 
 	public function search(Request $request){
 
-		$users = User::where('email', 'LIKE', "%{$request->email}%")->limit(5)->get();
+		$users = User::where('email', 'LIKE', "%{$request->email}%")
+			->where('id', '!=', $request->user()->id)
+			->limit(5)->get();
 		return response()->json($users);
 	}
 }
