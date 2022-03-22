@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Team;
 use App\Models\Tournament;
+use App\Models\UserPay;
 
 class Teams extends Controller{
 
@@ -37,21 +38,56 @@ class Teams extends Controller{
    */
   public function store(Request $request, $tournamentId){
 
+  	$tournament = Tournament::find($tournamentId);
+  	$user = $request->user();
+
   	try {
 
 			DB::beginTransaction();
-			$tournament = Tournament::find($tournamentId);
+
+			if($tournament->entry){
+
+				$stripe = new \Stripe\StripeClient(
+				  env('STRIPE_SECRET_KEY')
+				);
+
+				$payment = $stripe->paymentIntents->retrieve(
+				  $request->paymentId,
+				  []
+				);
+
+				$userPayment = UserPay::where('payment_id', $request->paymentId)->first();
+
+				if($userPayment){
+
+					return respponse()->json('pay duplicated', 400);
+				}
+
+				if($payment->amount_received != ($tournament->entry * 100)){
+
+					return respponse()->json('invalid amount received', 400);
+				}
+
+				$user->pays()->save(new UserPay([
+					'amount' => $tournament->entry,
+					'payment_id' => $request->paymentId
+				]));
+	  	}
+
 			$team = new Team(['name' => $request->name]);
 			$tournament->teams()->save($team);
 			$players = collect($request->players)->map(function($item) {
 	  		return $item['id'];
 	  	});
 
-	  	$players->push($request->user()->id);
 	  	$team->players()->attach($players);
+	  	$team->players()->attach($user->id, ['confirmed' => true]);
 
 			DB::commit();
-		} catch (\Exception $e) {
+		}catch(Stripe\Exception\InvalidRequestException $e){
+
+  		return respponse()->json('invalid pay', 400);
+  	}catch(\Exception $e){
 
 			DB::rollback();
 			return response()->json($e->getMessage());

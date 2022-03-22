@@ -8,6 +8,7 @@ use App\Http\Controllers\Tournaments;
 use App\Http\Controllers\User\Profile;
 use App\Http\Controllers\User\Users;
 use App\Http\Controllers\Teams;
+use App\Http\Controllers\StripePays;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +45,8 @@ Route::middleware(['auth:api'])->group(function(){
 	Route::get('users/search', [Users::class, 'search'])->name('users.search');
 	Route::post('tournaments/{tournamentId}/teams', [Teams::class, 'store'])->name('tournaments.teams.store');
 	Route::get('teams', [Teams::class, 'index'])->name('teams.index');
+
+	Route::post('create-payment-intent', [StripePays::class, 'createPaymentIntent']);
 });
 
 require __DIR__.'/auth.php';

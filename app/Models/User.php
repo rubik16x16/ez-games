@@ -46,4 +46,9 @@ class User extends Authenticatable{
 
 		return $this->belongsToMany(Team::class, 'user_team')->withPivot('confirmed');
 	}
+
+	public function pays(){
+
+		return $this->hasMany(UserPay::class);
+	}
 }
