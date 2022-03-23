@@ -23,7 +23,8 @@ class Register extends Controller{
 		$validator = Validator::make($request->all(), [
 			'captchaResponse' => ['required'],
 			'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-			'password' => ['required', 'max:30']
+			'password' => ['required', 'max:30'],
+			'nickname' => ['required', 'max:30']
 		]);
 
 		if ($validator->fails()) {
@@ -56,6 +57,7 @@ class Register extends Controller{
 			$user = User::create([
 				'email' => $request->email,
 				'password' => Hash::make($request->password),
+				'nickname' => $request->nickname
 			]);
 
 			$UserVerificationToken = new UserVerificationToken([
@@ -73,7 +75,7 @@ class Register extends Controller{
 		}
 
 		$token = $tokenResult->token;
-		Mail::to("ekimanthony1996@hotmail.com")->send(new DemoEmail(['token' => $UserVerificationToken->token
+		Mail::to($user->email)->send(new DemoEmail(['token' => $UserVerificationToken->token
 		]));
 
 		return response()->json([

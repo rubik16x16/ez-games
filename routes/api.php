@@ -39,8 +39,8 @@ Route::middleware(['auth:api'])->group(function(){
 		'tournaments' => 'id'
 	]);
 
-	Route::get('profile', [Profile::class, 'index'])->name('profile.index');
-	Route::put('profile/nickname', [Profile::class, 'setNickname'])->name('profile.nickname.update');
+	// Route::get('profile', [Profile::class, 'index'])->name('profile.index');
+	// Route::put('profile/nickname', [Profile::class, 'setNickname'])->name('profile.nickname.update');
 	Route::get('profile/cod-user', [Profile::class, 'getCodUser']);
 	Route::get('users/search', [Users::class, 'search'])->name('users.search');
 	Route::post('tournaments/{tournamentId}/teams', [Teams::class, 'store'])->name('tournaments.teams.store');
