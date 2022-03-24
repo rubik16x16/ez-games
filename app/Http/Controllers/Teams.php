@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
+use App\Mail\TournamentRegister;
 use App\Models\Team;
 use App\Models\Tournament;
 use App\Models\UserPay;
@@ -38,8 +41,36 @@ class Teams extends Controller{
    */
   public function store(Request $request, $tournamentId){
 
+  	$validator = Validator::make($request->all(), [
+			'name' => ['required', 'max:30', 'unique:teams'],
+			'players' => ['array', 'between:0,5']
+		]);
+
+		if ($validator->fails()) {
+			return response()->json($validator->messages(), 400);
+		}
+
   	$tournament = Tournament::find($tournamentId);
   	$user = $request->user();
+  	$playerIds = collect($request->players)->map(function($item) {
+  		return $item['id'];
+  	});
+  	$allPlayerIds = clone $playerIds;
+  	$allPlayerIds->push($user->id);
+
+  	if($user->teamsCaptain->count() > 0){
+
+  		return response()->json([
+				'user' => ["you already created a team"]
+  		], 400);
+  	}
+
+  	if($allPlayerIds->countBy()->count() != $playerIds->count() + 1){
+
+  		return response()->json([
+				'players' => ['only unique players']
+  		], 400);
+  	}
 
   	try {
 
@@ -75,13 +106,19 @@ class Teams extends Controller{
 	  	}
 
 			$team = new Team(['name' => $request->name]);
+			$team->captain()->associate($user);
 			$tournament->teams()->save($team);
-			$players = collect($request->players)->map(function($item) {
-	  		return $item['id'];
-	  	});
 
-	  	$team->players()->attach($players);
+	  	$team->players()->attach($playerIds);
 	  	$team->players()->attach($user->id, ['confirmed' => true]);
+
+	  	$emailPlayers = collect($request->players);
+	  	$emailPlayers->push($user->toArray());
+
+	  	foreach($emailPlayers as $player){
+
+	  		Mail::to($player['email'])->send(new TournamentRegister(['tournament' => $tournament]));
+	  	}
 
 			DB::commit();
 		}catch(Stripe\Exception\InvalidRequestException $e){
@@ -90,7 +127,10 @@ class Teams extends Controller{
   	}catch(\Exception $e){
 
 			DB::rollback();
-			return response()->json($e->getMessage());
+			return response()->json([
+				'message' => $e->getMessage(),
+				'trace' => $e->getTrace()
+			], 500);
 		}
 
 		return response()->json(null, 201);

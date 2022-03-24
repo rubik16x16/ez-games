@@ -22,4 +22,9 @@ class Team extends Model{
 
 		return $this->belongsToMany(User::class, 'user_team')->withPivot('confirmed');
 	}
+
+	public function captain(){
+
+		return $this->belongsTo(User::class, 'captain_id');
+	}
 }

@@ -15,7 +15,9 @@ class CreateTeamsTable extends Migration{
       $table->id();
 			$table->string('name');
 			$table->unsignedBigInteger('tournament_id');
+			$table->unsignedBigInteger('captain_id')->nullable();
 			$table->foreign('tournament_id')->references('id')->on('tournaments')->onDelete('cascade');
+			$table->foreign('captain_id')->references('id')->on('users')->onDelete('set null');
       $table->timestamps();
     });
   }

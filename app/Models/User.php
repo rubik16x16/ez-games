@@ -51,4 +51,9 @@ class User extends Authenticatable{
 
 		return $this->hasMany(UserPay::class);
 	}
+
+	public function teamsCaptain(){
+
+		return $this->hasMany(Team::class, 'captain_id');
+	}
 }
