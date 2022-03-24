@@ -24,7 +24,7 @@ class Register extends Controller{
 			'captchaResponse' => ['required'],
 			'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
 			'password' => ['required', 'max:30'],
-			'nickname' => ['required', 'max:30']
+			'nickname' => ['required', 'max:30', 'unique:users']
 		]);
 
 		if ($validator->fails()) {
@@ -71,7 +71,10 @@ class Register extends Controller{
 		} catch (\Exception $e) {
 
 			DB::rollback();
-			return response()->json($e->getMessage());
+			return response()->json([
+				'message' => $e->getMessage(),
+				'trace' => $e->getTrace()
+			], 500);
 		}
 
 		$token = $tokenResult->token;
