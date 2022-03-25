@@ -21,7 +21,7 @@ class Register extends Controller{
 	public function store(Request $request){
 
 		$validator = Validator::make($request->all(), [
-			'captchaResponse' => ['required'],
+			// 'captchaResponse' => ['required'],
 			'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
 			'password' => ['required', 'max:30'],
 			'nickname' => ['required', 'max:30', 'unique:users']
@@ -31,25 +31,25 @@ class Register extends Controller{
 			return response()->json($validator->messages(), 400);
 		}
 
-		$client = new Client();
-		$res = $client->post('https://www.google.com/recaptcha/api/siteverify', [
-			'form_params' => [
-				'secret' => env('CAPTCHA_SECRET'),
-				'response' => $request->captchaResponse
-			]
-		]);
+		// $client = new Client();
+		// $res = $client->post('https://www.google.com/recaptcha/api/siteverify', [
+		// 	'form_params' => [
+		// 		'secret' => env('CAPTCHA_SECRET'),
+		// 		'response' => $request->captchaResponse
+		// 	]
+		// ]);
 
-		$body = $res->getBody();
-		$content = json_decode($body->getContents());
+		// $body = $res->getBody();
+		// $content = json_decode($body->getContents());
 
-		if(!$content->success){
+		// if(!$content->success){
 
-			return response()->json([
-				'errors' => [
-					'captcha' =>['Invalid captchaResponse']
-				]
-			], 400);
-		}
+		// 	return response()->json([
+		// 		'errors' => [
+		// 			'captcha' =>['Invalid captchaResponse']
+		// 		]
+		// 	], 400);
+		// }
 
 		try {
 

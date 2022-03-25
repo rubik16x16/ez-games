@@ -16,22 +16,15 @@ class TournamentsSeeder extends Seeder{
 		Tournament::insert([
 			[
 				'name' => 'BR DUOS Rebirth Duos',
-				'start' => '2022-03-04 12:00:00',
-				'end' => '2022-03-06 12:00:00',
-				'entry' => 15,
-				'reward' => 350
+				'start' => '2022-03-27 12:00:00',
+				'end' => '2022-03-27 14:00:00',
+				'entry' => null,
+				'reward' => 30
 			],
 			[
-				'name' => 'BR TRIOS Rebirth TRIOS',
-				'start' => '2022-03-04 12:00:00',
-				'end' => '2022-03-06 12:00:00',
-				'entry' => 20,
-				'reward' => 575
-			],
-			[
-				'name' => 'BR QUADS Rebirth Quads',
-				'start' => '2022-03-04 12:00:00',
-				'end' => '2022-03-06 12:00:00',
+				'name' => 'Special custom trios',
+				'start' => '2022-03-27 12:00:00',
+				'end' => '2022-03-27 14:00:00',
 				'entry' => null,
 				'reward' => 30
 			]
