@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\Register;
 use App\Http\Controllers\Profiles;
+use App\Http\Controllers\ScrapingTest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Tournaments;
@@ -24,6 +25,8 @@ use App\Http\Controllers\StripePays;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
   return $request->user();
 });
+
+Route::get('get-matches-data', [ScrapingTest::class, 'getMatchesData']);
 
 Route::resource('tournaments', Tournaments::class)
 	->only(['index', 'show'])

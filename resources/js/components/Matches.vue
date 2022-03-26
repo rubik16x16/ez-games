@@ -147,8 +147,6 @@ export default {
 		this.matches = this.$store.state.matches;
 		this.loadTeams();
 
-
-
 	},
 	methods: {
 
@@ -190,10 +188,9 @@ export default {
 			for(let team of match.teams){
 
 				for(let player of team.players){
-					await axios.get(process.env.MIX_PROXY_SERVER, {
+					await axios.get(`${process.env.MIX_APP_URL}/api/get-matches-data`, {
 						params: {
-							'api_key': process.env.MIX_PROXY_API_KEY,
-							'url': `https://api.tracker.gg/api/v2/warzone/standard/matches/atvi/${player.name.replace('#', '%23')}?type=wz`,
+							'nickname': player.name.replace('#', '%23')
 						}
 					}).then((res) => {
 
