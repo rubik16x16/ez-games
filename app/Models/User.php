@@ -56,4 +56,9 @@ class User extends Authenticatable{
 
 		return $this->hasMany(Team::class, 'captain_id');
 	}
+
+	public function matchesData(){
+
+		return $this->hasMany(UserMatchData::class);
+	}
 }

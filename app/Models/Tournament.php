@@ -22,4 +22,9 @@ class Tournament extends Model{
 
 			return $this->belongsTo(Team::class, 'winner_id');
 		}
+
+		public function matches(){
+
+			return $this->hasMany(TournamentMatch::class);
+		}
 }

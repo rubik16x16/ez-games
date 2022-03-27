@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\Register;
+use App\Http\Controllers\MatchesController;
 use App\Http\Controllers\Profiles;
 use App\Http\Controllers\ScrapingTest;
 use Illuminate\Http\Request;
@@ -27,6 +28,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('get-matches-data', [ScrapingTest::class, 'getMatchesData']);
+Route::get('store-teams-data/{tournamentId}', [MatchesController::class, 'storeTeamsData']);
 
 Route::resource('tournaments', Tournaments::class)
 	->only(['index', 'show'])
