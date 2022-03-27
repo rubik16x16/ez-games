@@ -67,4 +67,17 @@ class MatchesController extends Controller{
 
 		return response()->json($tournament);
 	}
+
+	public function getData(){
+
+		return response()->json([
+			[
+				'name' => 'Test',
+				'game1' => 0,
+				'game2' => 0,
+				'game3' => 0,
+				'total' => 0
+			]
+		]);
+	}
 }
