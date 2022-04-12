@@ -32,4 +32,9 @@ class Team extends Model{
 
 		return $this->hasMany(TeamMatchData::class);
 	}
+
+	public function unregisteredPlayers(){
+
+		return $this->hasMany(UnregisteredPlayer::class);
+	}
 }

@@ -30,6 +30,13 @@ class TournamentRegister extends Mailable{
 	 */
 	public function build(){
 
+		if($this->data['register']){
+
+			return $this->view('mail.tournament-register-invitation', [
+				'tournament' => $this->data['tournament']
+			]);
+		}
+
 		return $this->view('mail.tournament-register', [
 			'tournament' => $this->data['tournament']
 		]);

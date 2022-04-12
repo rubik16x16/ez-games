@@ -10,6 +10,7 @@ use App\Mail\TournamentRegister;
 use App\Models\Team;
 use App\Models\Tournament;
 use App\Models\UserPay;
+use App\Models\UnregisteredPlayer;
 
 class Teams extends Controller{
 
@@ -52,9 +53,11 @@ class Teams extends Controller{
 
   	$tournament = Tournament::find($tournamentId);
   	$user = $request->user();
+
   	$playerIds = collect($request->players)->map(function($item) {
   		return $item['id'];
   	});
+
   	$allPlayerIds = clone $playerIds;
   	$allPlayerIds->push($user->id);
 
@@ -65,12 +68,12 @@ class Teams extends Controller{
   		], 400);
   	}
 
-  	if($allPlayerIds->countBy()->count() != $playerIds->count() + 1){
+  	// if($allPlayerIds->countBy()->count() != $playerIds->count() + 1){
 
-  		return response()->json([
-				'players' => ['only unique players']
-  		], 400);
-  	}
+  	// 	return response()->json([
+			// 	'players' => ['only unique players']
+  	// 	], 400);
+  	// }
 
   	try {
 

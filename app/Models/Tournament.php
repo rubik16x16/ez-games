@@ -6,25 +6,25 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Tournament extends Model{
-    use HasFactory;
+  use HasFactory;
 
-		protected $table = 'tournaments';
-		protected $fillable = [
-			'name', 'start', 'end'
-		];
+	protected $table = 'tournaments';
+	protected $fillable = [
+		'name', 'start', 'end'
+	];
 
-		public function teams(){
+	public function teams(){
 
-			return $this->hasMany(Team::class);
-		}
+		return $this->hasMany(Team::class);
+	}
 
-		public function winner(){
+	public function winner(){
 
-			return $this->belongsTo(Team::class, 'winner_id');
-		}
+		return $this->belongsTo(Team::class, 'winner_id');
+	}
 
-		public function matches(){
+	public function matches(){
 
-			return $this->hasMany(TournamentMatch::class);
-		}
+		return $this->hasMany(TournamentMatch::class);
+	}
 }
