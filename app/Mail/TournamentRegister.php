@@ -30,7 +30,7 @@ class TournamentRegister extends Mailable{
 	 */
 	public function build(){
 
-		if($this->data['register']){
+		if(!$this->data['registered']){
 
 			return $this->view('mail.tournament-register-invitation', [
 				'tournament' => $this->data['tournament']

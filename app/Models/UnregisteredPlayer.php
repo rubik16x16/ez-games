@@ -12,4 +12,9 @@ class UnregisteredPlayer extends Model{
   protected $fillable = [
   	'email'
   ];
+
+  public function team(){
+
+  	return $this->belongsTo(Team::class);
+  }
 }

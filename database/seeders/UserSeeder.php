@@ -26,12 +26,12 @@ class UserSeeder extends Seeder{
 				'password' => '$2y$10$DPo9W89uwQsIqOFmsXDnl.cvW6sfYf/UGRN8GUURUQfk5hB/dIjGG',
 				'platform' => 'psn',
 			],
-			[
-				'nickname' => 'snowChild',
-				'email' => 'drt_mike@hotmail.com',
-				'password' => '$2y$10$DPo9W89uwQsIqOFmsXDnl.cvW6sfYf/UGRN8GUURUQfk5hB/dIjGG',
-				'platform' => 'psn',
-			]
+			// [
+			// 	'nickname' => 'snowChild',
+			// 	'email' => 'drt_mike@hotmail.com',
+			// 	'password' => '$2y$10$DPo9W89uwQsIqOFmsXDnl.cvW6sfYf/UGRN8GUURUQfk5hB/dIjGG',
+			// 	'platform' => 'psn',
+			// ]
 		]);
 
 		$faker = Factory::create();

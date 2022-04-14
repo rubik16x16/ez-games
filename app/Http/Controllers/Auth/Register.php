@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UserVerificationToken;
+use App\Models\UnregisteredPlayer;
 use App\Mail\DemoEmail;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -63,6 +64,15 @@ class Register extends Controller{
 			$UserVerificationToken = new UserVerificationToken([
 				'token' => bin2hex(random_bytes(30))
 			]);
+
+			$unregisteredPlayer = UnregisteredPlayer::where('email', $user->email)->first();
+
+			if($unregisteredPlayer){
+
+				$team = $unregisteredPlayer->team;
+				$team->players()->attach($user);
+				$unregisteredPlayer->delete();
+			}
 
 			$UserVerificationToken->user()->associate($user);
 			$UserVerificationToken->save();

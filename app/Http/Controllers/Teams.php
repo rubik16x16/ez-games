@@ -55,18 +55,22 @@ class Teams extends Controller{
   	$user = $request->user();
 
   	$playerIds = collect($request->players)->map(function($item) {
+
   		return $item['id'];
+  	})->filter(function($value, $key){
+
+  		return $value != null;
   	});
 
   	$allPlayerIds = clone $playerIds;
   	$allPlayerIds->push($user->id);
 
-  	if($user->teamsCaptain->count() > 0){
+  	// if($user->teamsCaptain->count() > 0){
 
-  		return response()->json([
-				'user' => ["you already created a team"]
-  		], 400);
-  	}
+  	// 	return response()->json([
+			// 	'user' => ["you already created a team"]
+  	// 	], 400);
+  	// }
 
   	// if($allPlayerIds->countBy()->count() != $playerIds->count() + 1){
 
@@ -120,7 +124,20 @@ class Teams extends Controller{
 
 	  	foreach($emailPlayers as $player){
 
-	  		Mail::to($player['email'])->send(new TournamentRegister(['tournament' => $tournament]));
+	  		if($player['id']){
+
+	  			$registered = true;
+	  		}else{
+
+	  			$registered = false;
+	  			$unregisteredPlayer = new UnregisteredPlayer($player);
+	  			$team->unregisteredPlayers()->save($unregisteredPlayer);
+	  		}
+
+	  		Mail::to($player['email'])->send(new TournamentRegister([
+	  			'tournament' => $tournament,
+	  			'registered' => $registered
+	  		]));
 	  	}
 
 			DB::commit();
