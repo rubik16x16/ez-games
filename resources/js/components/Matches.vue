@@ -188,9 +188,10 @@ export default {
 			for(let team of match.teams){
 
 				for(let player of team.players){
+
 					await axios.get(`${process.env.MIX_APP_URL}/api/get-matches-data`, {
 						params: {
-							'nickname': player.name.replace('#', '%23')
+							'nickname': player.name
 						}
 					}).then((res) => {
 
