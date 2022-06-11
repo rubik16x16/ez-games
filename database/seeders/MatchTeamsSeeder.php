@@ -19,8 +19,10 @@ class MatchTeamsSeeder extends Seeder{
 	public function run(){
 
 		$tournament = Tournament::find(1);
-		$matchId = '2021675361410879950';
-		$client = new Client();
+		$matchId = '1527067947364715112';
+		$client = new Client([
+			'verify' => false
+		]);
 		$url = env('PROXY_SERVER') . '?api_key=' . env('PROXY_API_KEY') . "&premium_proxy=True" . "&url=https://api.tracker.gg/api/v2/warzone/standard/matches/{$matchId}";
 
 		$res = $client->request('GET', $url);

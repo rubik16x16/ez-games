@@ -9,10 +9,14 @@ class TournamentMatch extends Model{
 	use HasFactory;
 
 	protected $table = 'matches';
+	protected $keyType = 'string';
+
 	protected $fillable = [
-		'duration', 'player_count',
+		'id', 'duration', 'player_count',
 		'map_name', 'mode_name'
 	];
+
+	public $incrementing = false;
 
 	public function tournament(){
 

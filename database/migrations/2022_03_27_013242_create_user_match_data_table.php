@@ -19,7 +19,7 @@ class CreateUserMatchDataTable extends Migration{
 			$table->integer('deaths');
 			$table->integer('kdratio');
 			$table->unsignedBigInteger('user_id');
-			$table->bigInteger('match_id');
+			$table->string('match_id');
 			$table->foreign('match_id')->references('id')->on('matches')->onDelete('cascade');
 			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 			$table->timestamps();
