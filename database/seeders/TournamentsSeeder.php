@@ -16,8 +16,8 @@ class TournamentsSeeder extends Seeder{
 		Tournament::insert([
 			[
 				'name' => 'BR SOLO Rebirth Solo',
-				'start' => '2022-06-10 12:00:00',
-				'end' => '2022-06-11 00:00:00',
+				'start' => '2022-06-12 05:00:00',
+				'end' => '2022-06-13 00:00:00',
 				'image' => 'storage/images/tournaments/Tournament-Cards-1.png',
 				'num_players' => 1,
 				'entry' => 100,

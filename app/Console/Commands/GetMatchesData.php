@@ -91,6 +91,8 @@ class GetMatchesData extends Command
 						}
 					});
 
+					echo $tournamentMatches->count();
+
 					foreach($tournamentMatches as $matchData){
 
 						try{
@@ -173,7 +175,5 @@ class GetMatchesData extends Command
 					}
 				}
 			}
-
-			echo 'hello world';
     }
 }

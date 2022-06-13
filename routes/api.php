@@ -29,7 +29,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('get-matches-data', [ScrapingTest::class, 'getMatchesData']);
 Route::get('store-teams-data/{tournamentId}', [MatchesController::class, 'storeTeamsData']);
-Route::get('tournaments/get-data', [MatchesController::class, 'getData']);
+Route::get('tournaments/{id}/get-data', [MatchesController::class, 'getData']);
 
 Route::resource('tournaments', Tournaments::class)
 	->only(['index', 'show'])

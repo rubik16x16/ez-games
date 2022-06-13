@@ -73,4 +73,38 @@ class MatchesController extends Controller{
 
 		return response()->json($tournament);
 	}
+
+	public function getData($id){
+
+		$tournament = Tournament::with([
+			'teams',
+			'teams.matchesData' => function($query){
+				$query->orderBy('kills', 'DESC')->take(3);
+			}
+		])->find($id);
+
+		$teams = collect();
+
+		foreach($tournament->teams as $team){
+
+			$total = 0;
+
+			foreach($team->matchesData as $match){
+
+				$total += $match->kills;
+			}
+
+			$teamData = collect([
+				'name' => $team->name,
+				'game1' => isset($team->matchesData[0]) ? $team->matchesData[0]->kills : 0,
+				'game2' => isset($team->matchesData[1]) ? $team->matchesData[1]->kills : 0,
+				'game3' => isset($team->matchesData[2]) ? $team->matchesData[2]->kills : 0,
+				'total' => $total
+			]);
+
+			$teams->push($teamData);
+		}
+
+		return response()->json($teams);
+	}
 }
