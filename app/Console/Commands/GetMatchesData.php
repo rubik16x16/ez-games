@@ -7,6 +7,7 @@ use App\Models\Tournament;
 use App\Models\TournamentMatch;
 use App\Models\UserMatchData;
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Console\Command;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ServerException;
@@ -45,6 +46,14 @@ class GetMatchesData extends Command
      * @return int
      */
     public function handle(){
+
+			DB::table('get_matches_history')->insert([
+				'number_tournaments' => 1,
+				'created_at' => new DateTime('now'),
+				'updated_at' => new DateTime('now')
+			]);
+
+			return;
 
 			$today = Carbon::now();
 
