@@ -14,35 +14,35 @@ use App\Models\UnregisteredPlayer;
 
 class Teams extends Controller{
 
-  /**
-   * Display a listing of the resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
-  public function index(){
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function index(){
 
-  	return response()->json(Team::all());
-  }
+		return response()->json(Team::all());
+	}
 
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
-  public function create()
-  {
-      //
-  }
+	/**
+	 * Show the form for creating a new resource.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function create()
+	{
+			//
+	}
 
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @return \Illuminate\Http\Response
-   */
-  public function store(Request $request, $tournamentId){
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function store(Request $request, $tournamentId){
 
-  	$validator = Validator::make($request->all(), [
+		$validator = Validator::make($request->all(), [
 			'name' => ['required', 'max:30', 'unique:teams'],
 			'players' => ['array', 'between:0,5']
 		]);
@@ -51,100 +51,100 @@ class Teams extends Controller{
 			return response()->json($validator->messages(), 400);
 		}
 
-  	$tournament = Tournament::find($tournamentId);
-  	$user = $request->user();
+		$tournament = Tournament::find($tournamentId);
+		$user = $request->user();
 
-  	$playerIds = collect($request->players)->map(function($item) {
+		$playerIds = collect($request->players)->map(function($item) {
 
-  		return $item['id'];
-  	})->filter(function($value, $key){
+			return $item['id'];
+		})->filter(function($value, $key){
 
-  		return $value != null;
-  	});
+			return $value != null;
+		});
 
-  	$allPlayerIds = clone $playerIds;
-  	$allPlayerIds->push($user->id);
+		$allPlayerIds = clone $playerIds;
+		$allPlayerIds->push($user->id);
 
-  	// if($user->teamsCaptain->count() > 0){
+		// if($user->teamsCaptain->count() > 0){
 
-  	// 	return response()->json([
+		// 	return response()->json([
 			// 	'user' => ["you already created a team"]
-  	// 	], 400);
-  	// }
+		// 	], 400);
+		// }
 
-  	// if($allPlayerIds->countBy()->count() != $playerIds->count() + 1){
+		// if($allPlayerIds->countBy()->count() != $playerIds->count() + 1){
 
-  	// 	return response()->json([
+		// 	return response()->json([
 			// 	'players' => ['only unique players']
-  	// 	], 400);
-  	// }
+		// 	], 400);
+		// }
 
-  	try {
+		try {
 
 			DB::beginTransaction();
 
 			if($tournament->entry){
 
 				$stripe = new \Stripe\StripeClient(
-				  env('STRIPE_SECRET_KEY')
+					env('STRIPE_SECRET_KEY')
 				);
 
 				$payment = $stripe->paymentIntents->retrieve(
-				  $request->paymentId,
-				  []
+					$request->paymentId,
+					[]
 				);
 
 				$userPayment = UserPay::where('payment_id', $request->paymentId)->first();
 
 				if($userPayment){
 
-					return respponse()->json('pay duplicated', 400);
+					return response()->json('pay duplicated', 400);
 				}
 
 				if($payment->amount_received != ($tournament->entry * 100)){
 
-					return respponse()->json('invalid amount received', 400);
+					return response()->json('invalid amount received', 400);
 				}
 
 				$user->pays()->save(new UserPay([
 					'amount' => $tournament->entry,
 					'payment_id' => $request->paymentId
 				]));
-	  	}
+			}
 
 			$team = new Team(['name' => $request->name]);
 			$team->captain()->associate($user);
 			$tournament->teams()->save($team);
 
-	  	$team->players()->attach($playerIds);
-	  	$team->players()->attach($user->id, ['confirmed' => false]);
+			$team->players()->attach($playerIds);
+			$team->players()->attach($user->id, ['confirmed' => false]);
 
-	  	$emailPlayers = collect($request->players);
-	  	$emailPlayers->push($user->toArray());
+			$emailPlayers = collect($request->players);
+			$emailPlayers->push($user->toArray());
 
-	  	foreach($emailPlayers as $player){
+			foreach($emailPlayers as $player){
 
-	  		if($player['id']){
+				if($player['id']){
 
-	  			$registered = true;
-	  		}else{
+					$registered = true;
+				}else{
 
-	  			$registered = false;
-	  			$unregisteredPlayer = new UnregisteredPlayer($player);
-	  			$team->unregisteredPlayers()->save($unregisteredPlayer);
-	  		}
+					$registered = false;
+					$unregisteredPlayer = new UnregisteredPlayer($player);
+					$team->unregisteredPlayers()->save($unregisteredPlayer);
+				}
 
-	  		Mail::to($player['email'])->send(new TournamentRegister([
-	  			'tournament' => $tournament,
-	  			'registered' => $registered
-	  		]));
-	  	}
+				Mail::to($player['email'])->send(new TournamentRegister([
+					'tournament' => $tournament,
+					'registered' => $registered
+				]));
+			}
 
 			DB::commit();
-		}catch(Stripe\Exception\InvalidRequestException $e){
+		}catch(\Stripe\Exception\InvalidRequestException $e){
 
-  		return respponse()->json('invalid pay', 400);
-  	}catch(\Exception $e){
+			return response()->json('invalid pay', 400);
+		}catch(\Exception $e){
 
 			DB::rollback();
 			return response()->json([
@@ -154,50 +154,50 @@ class Teams extends Controller{
 		}
 
 		return response()->json(null, 201);
-  }
+	}
 
-  /**
-   * Display the specified resource.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
-  public function show($id)
-  {
-      //
-  }
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function show($id)
+	{
+			//
+	}
 
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
-  public function edit($id)
-  {
-      //
-  }
+	/**
+	 * Show the form for editing the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function edit($id)
+	{
+			//
+	}
 
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
-  public function update(Request $request, $id)
-  {
-      //
-  }
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function update(Request $request, $id)
+	{
+			//
+	}
 
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
-  public function destroy($id)
-  {
-      //
-  }
+	/**
+	 * Remove the specified resource from storage.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function destroy($id)
+	{
+			//
+	}
 }
