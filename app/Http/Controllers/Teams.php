@@ -117,7 +117,7 @@ class Teams extends Controller{
 			$tournament->teams()->save($team);
 
 	  	$team->players()->attach($playerIds);
-	  	$team->players()->attach($user->id, ['confirmed' => true]);
+	  	$team->players()->attach($user->id, ['confirmed' => false]);
 
 	  	$emailPlayers = collect($request->players);
 	  	$emailPlayers->push($user->toArray());
