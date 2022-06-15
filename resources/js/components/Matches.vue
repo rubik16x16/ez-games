@@ -109,7 +109,7 @@
 													<td>{{ playerMatch.attributes.id }}</td>
 													<td>{{ playerMatch.segments[0].stats.kills.value }}</td>
 													<td>{{ playerMatch.segments[0].stats.kdRatio.value }}</td>
-													<td>{{ playerMatch.metadata.timestamp }}</td>
+													<td>{{ (new Date(playerMatch.metadata.timestamp)).toLocaleString('en-US', {timeZone: 'America/New_York'}) }}</td>
 												</tr>
 											</tbody>
 										</template>
@@ -188,19 +188,22 @@ export default {
 			for(let team of match.teams){
 
 				for(let player of team.players){
+
 					await axios.get(`${process.env.MIX_APP_URL}/api/get-matches-data`, {
 						params: {
-							'nickname': player.name.replace('#', '%23')
+							'nickname': player.name
 						}
 					}).then((res) => {
 
 						let matches = res.data.data.matches;
 						let allowedMatches = matches.filter((item) => {
 
-							let matchStartDate = new Date(match.start + '+00:00');
-							let matchEndDate = new Date(match.end + '+00:00');
+							let matchStartDate = new Date(match.start);
+							let matchEndDate = new Date(match.end);
 							let matchDate = new Date(item.metadata.timestamp);
 
+							console.log(matchStartDate, matchEndDate, matchDate);
+							console.log(matchDate >= matchStartDate, matchDate <= matchEndDate);
 							if(matchDate >= matchStartDate && matchDate <= matchEndDate){
 								return item;
 							}

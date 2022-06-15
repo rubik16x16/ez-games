@@ -74,135 +74,37 @@ class MatchesController extends Controller{
 		return response()->json($tournament);
 	}
 
-	public function getData(){
+	public function getData($id){
 
-		return response()->json([
-			[
-				'name' => 'team 254',
-				'game1' => 0,
-				'game2' => 0,
-				'game3' => 0,
-				'total' => 0
-			],
-			[
-				'name' => 'LAS YEGUAS',
-				'game1' => 0,
-				'game2' => 0,
-				'game3' => 0,
-				'total' => 0
-			],
-			[
-				'name' => 'LA COMARCA',
-				'game1' => 0,
-				'game2' => 0,
-				'game3' => 0,
-				'total' => 0
-			],
-			[
-				'name' => 'Sweaty Geese',
-				'game1' => 0,
-				'game2' => 0,
-				'game3' => 0,
-				'total' => 0
-			],
-			[
-				'name' => 'Cartoon cartel Johhndevil',
-				'game1' => 0,
-				'game2' => 0,
-				'game3' => 0,
-				'total' => 0
-			],
-			[
-				'name' => 'CCCSW',
-				'game1' => 0,
-				'game2' => 0,
-				'game3' => 0,
-				'total' => 0
-			],
-			[
-				'name' => 'Anti Judas',
-				'game1' => 0,
-				'game2' => 0,
-				'game3' => 0,
-				'total' => 0
-			],
-			[
-				'name' => 'ENEM1',
-				'game1' => 0,
-				'game2' => 0,
-				'game3' => 0,
-				'total' => 0
-			],
-			[
-				'name' => 'Supervillains',
-				'game1' => 0,
-				'game2' => 0,
-				'game3' => 0,
-				'total' => 0
-			],
-			[
-				'name' => 'Cuba',
-				'game1' => 0,
-				'game2' => 0,
-				'game3' => 0,
-				'total' => 0
-			],
-			[
-				'name' => 'Rippers boys',
-				'game1' => 0,
-				'game2' => 0,
-				'game3' => 0,
-				'total' => 0
-			],
-			[
-				'name' => 'Da Boys',
-				'game1' => 0,
-				'game2' => 0,
-				'game3' => 0,
-				'total' => 0
-			],
-			[
-				'name' => 'TheThreeBeans69',
-				'game1' => 0,
-				'game2' => 0,
-				'game3' => 0,
-				'total' => 0
-			],
-			[
-				'name' => 'Team TKO',
-				'game1' => 0,
-				'game2' => 0,
-				'game3' => 0,
-				'total' => 0
-			],
-			[
-				'name' => 'Get Gud',
-				'game1' => 0,
-				'game2' => 0,
-				'game3' => 0,
-				'total' => 0
-			],
-			[
-				'name' => 'AJ Demons',
-				'game1' => 0,
-				'game2' => 0,
-				'game3' => 0,
-				'total' => 0
-			],
-			[
-				'name' => 'Zolh x Bean x Firmi',
-				'game1' => 0,
-				'game2' => 0,
-				'game3' => 0,
-				'total' => 0
-			],
-			[
-				'name' => 'JSquad',
-				'game1' => 0,
-				'game2' => 0,
-				'game3' => 0,
-				'total' => 0
-			]
-		]);
+		$tournament = Tournament::with([
+			'teams',
+			'teams.matchesData' => function($query){
+				$query->orderBy('kills', 'DESC')->take(3);
+			}
+		])->find($id);
+
+		$teams = collect();
+
+		foreach($tournament->teams as $team){
+
+			$total = 0;
+
+			foreach($team->matchesData as $match){
+
+				$total += $match->kills;
+			}
+
+			$teamData = collect([
+				'name' => $team->name,
+				'game1' => isset($team->matchesData[0]) ? $team->matchesData[0]->kills : 0,
+				'game2' => isset($team->matchesData[1]) ? $team->matchesData[1]->kills : 0,
+				'game3' => isset($team->matchesData[2]) ? $team->matchesData[2]->kills : 0,
+				'total' => $total
+			]);
+
+			$teams->push($teamData);
+		}
+
+		return response()->json($teams);
 	}
 }

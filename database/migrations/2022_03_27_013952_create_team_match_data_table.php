@@ -19,7 +19,7 @@ class CreateTeamMatchDataTable extends Migration{
 			$table->integer('deaths');
 			$table->integer('kdratio');
 			$table->unsignedBigInteger('team_id');
-			$table->bigInteger('match_id');
+			$table->string('match_id');
 			$table->foreign('match_id')->references('id')->on('matches')->onDelete('cascade');
 			$table->foreign('team_id')->references('id')->on('teams')->onDelete('cascade');
 			$table->timestamps();

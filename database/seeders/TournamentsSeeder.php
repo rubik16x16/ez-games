@@ -16,31 +16,13 @@ class TournamentsSeeder extends Seeder{
 		Tournament::insert([
 			[
 				'name' => 'BR SOLO Rebirth Solo',
-				'start' => '2022-03-27 12:00:00',
-				'end' => '2022-03-27 14:00:00',
-				'image' => 'storage/images/tournaments/tournaments-games-1.png',
+				'start' => '2022-06-15 20:00:00',
+				'end' => '2022-06-16 00:00:00',
+				'image' => 'storage/images/tournaments/Tournament-Cards-1.png',
 				'num_players' => 1,
-				'entry' => null,
+				'entry' => 0,
 				'reward' => 30
 			],
-			[
-				'name' => 'BR DUOS Rebirth Duos',
-				'start' => '2022-03-27 12:00:00',
-				'end' => '2022-03-27 14:00:00',
-				'image' => 'storage/images/tournaments/tournaments-games-2.png',
-				'num_players' => 2,
-				'entry' => null,
-				'reward' => 30
-			],
-			[
-				'name' => 'BR TRIOS Rebirth Trios',
-				'start' => '2022-03-27 12:00:00',
-				'end' => '2022-03-27 14:00:00',
-				'image' => 'storage/images/tournaments/tournaments-games-3.png',
-				'num_players' => 3,
-				'entry' => null,
-				'reward' => 30
-			]
 		]);
 	}
 }
