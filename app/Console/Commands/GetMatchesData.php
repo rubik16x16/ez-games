@@ -52,15 +52,20 @@ class GetMatchesData extends Command
 			$dayTournaments = Tournament::with([
 				'teams'
 			])
-				->whereDate('start', '<', $today->toDateString())
-				->orWhere(function($query) use($today){
-					$query->whereDate('start', $today->toDateString())
-						->whereTime('start', '<=', $today->toTimeString());
-				})
-				->whereDate('end', '>', $today->toDateString())
-				->orWhere(function($query) use($today){
-					$query->whereDate('end', $today->toDateString())
-						->whereTime('end', '>', $today->toTimeString());
+				->where(function($query)use($today){
+
+					$query->whereDate('start', '<', $today->toDateString())
+					->orWhere(function($query) use($today){
+						$query->whereDate('start', $today->toDateString())
+							->whereTime('start', '<=', $today->toTimeString());
+					});
+				})->where(function($query)use($today){
+
+					$query->whereDate('end', '>', $today->toDateString())
+					->orWhere(function($query) use($today){
+						$query->whereDate('end', $today->toDateString())
+							->whereTime('end', '>', $today->toTimeString());
+					});
 				})
 				->get();
 
