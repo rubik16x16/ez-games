@@ -47,14 +47,6 @@ class GetMatchesData extends Command
      */
     public function handle(){
 
-			DB::table('get_matches_history')->insert([
-				'number_tournaments' => 1,
-				'created_at' => new DateTime('now'),
-				'updated_at' => new DateTime('now')
-			]);
-
-			return;
-
 			$today = Carbon::now();
 
 			$dayTournaments = Tournament::with([
@@ -74,6 +66,12 @@ class GetMatchesData extends Command
 
 			$client = new Client([
 				'verify' => false
+			]);
+
+			DB::table('get_matches_history')->insert([
+				'number_tournaments' => $dayTournaments->count(),
+				'created_at' => new DateTime('now'),
+				'updated_at' => new DateTime('now')
 			]);
 
 			foreach($dayTournaments as $tournament){
