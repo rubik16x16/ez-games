@@ -87,7 +87,6 @@ class GetMatchesData extends Command
 
 					$url = env('PROXY_SERVER') . '?api_key=' . env('PROXY_API_KEY') . "&url=https%3A%2F%2Fapi.tracker.gg%2Fapi%2Fv2%2Fwarzone%2Fstandard%2Fmatches%2Fatvi%2F" . $nickname . "%3Ftype%3Dwz";
 
-
 					$res = $client->request('GET', $url);
 					$data = json_decode($res->getBody());
 
@@ -145,8 +144,8 @@ class GetMatchesData extends Command
 
 									$playerData = $playersData->first(function($value) use($player){
 
-										$playerNickname = substr($player->nickname, 0, strpos($player->nickname, '#'));
-										return $playerNickname == $value->attributes->platformUserIdentifier;
+										$playerNickname = strtolower(substr($player->nickname, 0, strpos($player->nickname, '#')));
+										return $playerNickname == strtolower($value->attributes->platformUserIdentifier);
 									});
 
 									if($playerData){
