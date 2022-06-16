@@ -13,7 +13,7 @@ class Tournaments extends Controller{
 
 		$user = $request->user();
 
-		return response()->json($user->teams);
+		return response()->json($user->teams->load(['tournament']));
 	}
 
 	public function getMyTournament(Request $request, $id){
