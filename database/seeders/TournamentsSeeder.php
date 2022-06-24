@@ -18,6 +18,7 @@ class TournamentsSeeder extends Seeder{
 				'name' => 'BR TRIOS Rebirth Trios',
 				'start' => '2022-06-15 20:00:00',
 				'end' => '2022-06-15 21:30:00',
+				'type' => 'duos',
 				'image' => 'storage/images/tournaments/Tournament-Cards-1.png',
 				'num_players' => 3,
 				'entry' => 0,

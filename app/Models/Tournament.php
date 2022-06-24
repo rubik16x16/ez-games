@@ -10,7 +10,7 @@ class Tournament extends Model{
 
 	protected $table = 'tournaments';
 	protected $fillable = [
-		'name', 'start', 'end'
+		'name', 'start', 'end', 'type'
 	];
 
 	public function teams(){
