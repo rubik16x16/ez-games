@@ -87,7 +87,14 @@ class GetMatchesData extends Command
 
 					$url = env('PROXY_SERVER') . '?api_key=' . env('PROXY_API_KEY') . "&url=https%3A%2F%2Fapi.tracker.gg%2Fapi%2Fv2%2Fwarzone%2Fstandard%2Fmatches%2Fatvi%2F" . $nickname . "%3Ftype%3Dwz";
 
-					$res = $client->request('GET', $url);
+					try{
+
+						$res = $client->request('GET', $url);
+					}catch(\Exception $e){
+
+						continue;
+					}
+
 					$data = json_decode($res->getBody());
 
 					$matches = collect($data->data->matches);
