@@ -88,17 +88,18 @@ class MatchesController extends Controller{
 		foreach($tournament->teams as $team){
 
 			$total = 0;
+			$matchesData = $team->matchesData()->orderBy('kills', 'DESC')->take(3)->get();
 
-			foreach($team->matchesData as $match){
+			foreach($matchesData as $match){
 
 				$total += $match->kills;
 			}
 
 			$teamData = collect([
 				'name' => $team->name,
-				'game1' => isset($team->matchesData[0]) ? $team->matchesData[0]->kills : 0,
-				'game2' => isset($team->matchesData[1]) ? $team->matchesData[1]->kills : 0,
-				'game3' => isset($team->matchesData[2]) ? $team->matchesData[2]->kills : 0,
+				'game1' => isset($matchesData[0]) ? $matchesData[0]->kills : 0,
+				'game2' => isset($matchesData[1]) ? $matchesData[1]->kills : 0,
+				'game3' => isset($matchesData[2]) ? $matchesData[2]->kills : 0,
 				'total' => $total
 			]);
 

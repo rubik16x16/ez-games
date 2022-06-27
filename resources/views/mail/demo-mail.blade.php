@@ -78,7 +78,9 @@
 		<div class="card-content">
 			<h1 style="text-align: center;">Email verification</h5>
 			<p style="text-align: center;">Click the link below for verify your email</p>
-			<a href="{{ env('APP_URL') . '/verify-email/' . $token }}" style="margin: 40px 0; width: 100%; text-align: center;" type="submit" class="cmn-btn">VERIFY</a>
+			<div style="padding: 40px">
+				<a href="{{ env('APP_URL') . '/verify-email/' . $token }}" style="width: 100%; text-align: center; box-sizing:border-box" type="submit" class="cmn-btn">VERIFY</a>
+			</div>
 			<p style="text-align: center;">FOLLOW US ON ALL SOCIALS</p>
 			<div>
 				<a href="https://twitter.com/ezbattles"><img src="{{ asset('images/social-bg1.png') }}" alt="image"></a>
